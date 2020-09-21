@@ -1,0 +1,6 @@
+{
+  "options.thallium.fastrender": "Использовать быстрый рендер",
+  "options.thallium.fastMath": "Использовать быстрый просчет",
+  "options.thallium.optimizeAnimations": "Оптимизировать анимации",
+  "options.thallium.renderSkip": "Пропустить долгий рендер"
+}
