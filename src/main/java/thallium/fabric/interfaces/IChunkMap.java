@@ -5,14 +5,14 @@ import thallium.fabric.chunk.FastChunkMap;
 
 public interface IChunkMap {
 
-    public FastChunkMap getFastMap();
+    FastChunkMap getFastMap();
 
-    public void setFastMap(FastChunkMap fast);
+    void setFastMap(FastChunkMap fast);
 
-    public boolean inRadius(int x, int z);
+    WorldChunk getChunkByIndex(int index);
 
-    public WorldChunk getChunkByIndex(int index);
+    void setUpdating(boolean bl);
 
-    public void setUpdating(boolean bl);
+    boolean inRadius(int chunkX, int chunkZ);
 
 }

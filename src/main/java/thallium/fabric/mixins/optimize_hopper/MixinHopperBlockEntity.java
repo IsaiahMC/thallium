@@ -1,4 +1,4 @@
-package thallium.fabric.mixins.hopper;
+package thallium.fabric.mixins.optimize_hopper;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +25,6 @@ public class MixinHopperBlockEntity {
     @Inject(at = @At("HEAD"), method = "tick", cancellable = true) 
     public void hopperTick(CallbackInfo ci) {
         // ThalliumMod - Avoids searching the hopper if there is no items inside & no items in the input
-        //               Because I'm not good at redstone, I don't know if I have broken anything. So I will add vanilla compatibility.
         if (ThalliumOptions.optimizeHoppers && isHopperEmpty()) {
             vanillaCompact++; 
             if (vanillaCompact < 80) {
@@ -34,7 +33,6 @@ public class MixinHopperBlockEntity {
         }
     }
 
-    
     private boolean isHopperEmpty() {
         for (ItemStack i : this.inventory)
             if (!i.isEmpty()) return false;

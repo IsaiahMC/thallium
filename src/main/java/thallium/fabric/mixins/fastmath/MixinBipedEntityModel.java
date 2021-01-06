@@ -1,5 +1,8 @@
 package thallium.fabric.mixins.fastmath;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -70,8 +73,31 @@ public class MixinBipedEntityModel<T extends LivingEntity> {
     public float fastPitch = 9f;
     public boolean side = true;
 
+    public int test = 0;
+    public long last = System.currentTimeMillis();
+    public double lasta;
+
+    private static boolean TE = false;
+    private float iaa = 0;
+    private boolean side2 = false;
+
+    private void test() {
+        if (TE) return;
+        TE = true;
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            public void run() { 
+                if (iaa >= 10) side2 = true;
+                if (iaa <= -10) side2 = false;
+
+                iaa += side2 ? -2 : 2;
+            } 
+        }, 500, 20);
+    }
+
     @Overwrite
     public void setAngles(T livingEntity, float f, float g, float h, float i, float j) {
+        test();
         boolean bl = ((LivingEntity)livingEntity).getRoll() > 4;
         boolean bl2 = ((LivingEntity)livingEntity).isInSwimmingPose();
         this.head.yaw = i * ((float)Math.PI / 180);
@@ -91,15 +117,10 @@ public class MixinBipedEntityModel<T extends LivingEntity> {
 
         if (ThalliumOptions.fastPlayerModel) {
             // ThalliumMod - Fast Player Model: Don't use cosine to calculate limb movement.
-            // TODO: I may be a little off on the timing.
-            //
-            fastPitch += (side ? ThalliumOptions.modelNeg : ThalliumOptions.modelPos);
-            side = fastPitch > 10 ? true : (fastPitch < -10 ? false : side);
-            float fastPitchDivided = fastPitch/10;
-            this.leftArm.pitch = fastPitchDivided * 2.0f * g * 0.5f / k;
-            this.rightArm.pitch = -fastPitchDivided * 2.0f * g * 0.5f / k;
-            this.rightLeg.pitch = fastPitchDivided * 1.4f * g / k;
-            this.leftLeg.pitch = -fastPitchDivided * 1.4f * g / k;
+            this.leftArm.pitch = (iaa / 10) * g;
+            this.rightArm.pitch = -(iaa / 10) * g;
+            this.rightLeg.pitch = (iaa / 10) * 1.4f * g / k;
+            this.leftLeg.pitch = -(iaa / 10) * 1.4f * g / k;
         } else {
             this.rightLeg.pitch = MathHelper.cos(f * 0.6662f) * 1.4f * g / k;
             this.leftLeg.pitch = MathHelper.cos(f * 0.6662f + (float)Math.PI) * 1.4f * g / k;

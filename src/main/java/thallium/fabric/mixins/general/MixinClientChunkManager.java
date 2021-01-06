@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-package thallium.fabric.mixins.fastchunkrender;
+package thallium.fabric.mixins.general;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -71,6 +71,7 @@ public abstract class MixinClientChunkManager extends ChunkManager implements IC
 
     @Inject(at = @At("TAIL"), method = "<init>")
     public void init(ClientWorld w, int loadDistance, CallbackInfo ci) {
+        ThalliumMod.RENDER_DISTANCE = loadDistance;
         this.loadDistance = loadDistance;
     }
 
@@ -98,7 +99,7 @@ public abstract class MixinClientChunkManager extends ChunkManager implements IC
      */
     @Inject(at = @At("HEAD"), method = "updateLoadDistance", cancellable = true)
     public void updateLoadDistanceFast(int loadDistance, CallbackInfo ci) {
-        this.loadDistance = loadDistance;
+        this.loadDistance = (ThalliumMod.RENDER_DISTANCE = loadDistance);
         if (ThalliumOptions.useFastRenderer) {
             FastChunkMap clientChunkMap = new FastChunkMap(Math.max(2, loadDistance) + 3, (ClientChunkManager)(Object)this);
             ((IChunkMap)this.chunks).setUpdating(true);

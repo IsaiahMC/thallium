@@ -1,8 +1,7 @@
-package thallium.fabric.mixins.animations;
+package thallium.fabric.mixins.general;
 
 import java.util.List;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,24 +15,15 @@ import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import thallium.fabric.gui.ThalliumOptions;
-import thallium.fabric.interfaces.IChunkData;
-import thallium.fabric.interfaces.IChunkInfo;
 import thallium.fabric.interfaces.ISprite;
-import thallium.fabric.interfaces.IWorldRenderer;
 
-/**
- * Ports VannilaFix's Forge 1.12.2 Patch
- * 
- * @reason Replaces the updateAnimations method to only tick animated textures
- * that are in one of the loaded RenderChunks. This can lead to an FPS more than
- * three times higher on large modpacks with many textures.
- */
 @Mixin(SpriteAtlasTexture.class)
 public abstract class MixinSpriteAtlasTexture extends AbstractTexture {
 
     @Shadow
-    @Final
     private List<Sprite> animatedSprites;
+
+    private MinecraftClient mc;
 
     /**
      * @author
@@ -42,13 +32,9 @@ public abstract class MixinSpriteAtlasTexture extends AbstractTexture {
     @Inject(at = @At("HEAD"), method = "tickAnimatedSprites", cancellable = true)
     public void optimizedtickAnimatedSprites(CallbackInfo ci) {
         if (ThalliumOptions.optimizeAnimations) {
-            MinecraftClient mc = MinecraftClient.getInstance();
+            if (this.mc == null)
+                mc = MinecraftClient.getInstance();
             mc.getProfiler().push("determineVisibleTextures");
-    
-            for (net.minecraft.client.render.WorldRenderer.ChunkInfo renderInfo : ((IWorldRenderer)mc.worldRenderer).getChunkInfo())
-                for (SpriteAtlasTexture texture : ((IChunkData) ((IChunkInfo)renderInfo).getBuiltChunk().data.get()).getVisibleTextures())
-                    ((ISprite) texture).markNeedsAnimationUpdate();
-    
             GlStateManager.bindTexture(getGlId());
             for (Sprite texture : animatedSprites) {
                 if (((ISprite) texture).needsAnimationUpdate()) {

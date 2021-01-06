@@ -16,16 +16,16 @@ import thallium.fabric.math.FastMathType;
 
 public class ThalliumOptions {
 
-    public static boolean useFastRenderer    = true;
-    public static boolean useFastMath        = true;
-    public static boolean optimizeAnimations = true;
-    public static boolean renderSkip         = true;
-    public static boolean fastPlayerModel    = true;
-    public static boolean optimizeHoppers    = true;
-    public static double playerModelSpeed    = 1;
-
-    public static double modelPos = 0.22f * (float)playerModelSpeed;
-    public static double modelNeg = -0.22f * (float)playerModelSpeed;
+    public static boolean useFastRenderer     = true;
+    public static boolean useFastMath         = true;
+    public static boolean optimizeAnimations  = true;
+    public static boolean renderSkip          = true;
+    public static boolean fastPlayerModel     = true;
+    public static boolean optimizeHoppers     = true;
+    public static boolean optimizeBlockTick   = true;
+    public static boolean fastItemRender      = true;
+    public static boolean optimizeRedstone    = true;
+    public static boolean capEntityCollisions = true;
 
     public static EnumDirectionalRendering directionalRender = EnumDirectionalRendering.NORMAL;
     public static FastMathType fastMathType = FastMathType.RIVEN;
@@ -61,6 +61,26 @@ public class ThalliumOptions {
         save();
     });
 
+    public static final BooleanOption BLOCK_TICK_OPTIMIZE = new BooleanOption("Optimize Block Tick", gameOptions -> optimizeBlockTick, (gameOptions, boolean_) -> {
+        optimizeBlockTick = boolean_;
+        save();
+    });
+
+    public static final BooleanOption FAST_ITEM_RENDER = new BooleanOption("Fast Item Render", gameOptions -> fastItemRender, (gameOptions, boolean_) -> {
+        fastItemRender = boolean_;
+        save();
+    });
+
+    public static final BooleanOption OPTIMIZE_REDSTONE = new BooleanOption("Optimize Redstone (Paper)", gameOptions -> optimizeRedstone, (gameOptions, boolean_) -> {
+        optimizeRedstone = boolean_;
+        save();
+    });
+
+    public static final BooleanOption OPTIMIZE_ENTITY_COLLISION = new BooleanOption("Optimize Entity Collision", gameOptions -> capEntityCollisions, (gameOptions, boolean_) -> {
+        capEntityCollisions = boolean_;
+        save();
+    });
+
     public static CyclingOption DIRECTIONAL_RENDER;
     public static CyclingOption FAST_MATH_TYPE;
     public static DoubleOption DOUBLE_TEST;
@@ -78,13 +98,6 @@ public class ThalliumOptions {
             save();
         }, (options,cyc) -> { return new LiteralText("Math Algorithm: " + (useFastMath ? fastMathType.name() : "Fast Math OFF")); });
 
-        DOUBLE_TEST = new DoubleOption("Testing", 1, 20, 1, test2 -> playerModelSpeed, (gameOptions, double_) -> {
-            playerModelSpeed = double_;
-            modelPos = 0.22f * (float)playerModelSpeed;
-            modelNeg = -0.22f * (float)playerModelSpeed;
-            save();
-        }, (options,cyc) -> { return new LiteralText("Model Speed: " + playerModelSpeed); });
-
         NO_FOG = new CyclingOption("Fog Type", (options,integer) -> {
             fogType = fogType.ordinal() >= EnumFogType.values().length-1 ? EnumFogType.NORMAL : EnumFogType.values()[fogType.ordinal()+1];
             save();
@@ -93,7 +106,6 @@ public class ThalliumOptions {
 
     @SuppressWarnings("unchecked")
     public static void load() {
-        System.out.println("Loading saved options ...");
         long start = System.currentTimeMillis();
 
         try {
@@ -118,35 +130,39 @@ public class ThalliumOptions {
                     fastPlayerModel = Boolean.valueOf(key);
                 if (str.equals("optimizeHoppers"))
                     optimizeHoppers = Boolean.valueOf(key);
-                if (str.equals("modelSpeed"))
-                    playerModelSpeed = Double.valueOf(key);
                 if (str.equals("fogType"))
                     fogType = EnumFogType.values()[Integer.valueOf(key)];
+                if (str.equals("fastItemRender"))
+                    fastItemRender = Boolean.valueOf(key);
+                if (str.equals("optimizeRedstone"))
+                    optimizeRedstone = Boolean.valueOf(key);
+                if (str.equalsIgnoreCase("capEntityCollisions"))
+                    capEntityCollisions = Boolean.valueOf(key);
             }
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Loaded thallium options in " + (System.currentTimeMillis()-start) + "ms");
+        ThalliumMod.LOGGER.info("Loaded thallium options in " + (System.currentTimeMillis()-start) + "ms");
     }
 
     public static void save() {
-        System.out.println("Saving thallium options ...");
         long start = System.currentTimeMillis();
 
         try {
             HashMap<String,String> map = new HashMap<>();
-            map.put("fastRender",         "" + useFastRenderer);
-            map.put("fastmath",           "" + useFastMath);
-            map.put("optimizeAnimations", "" + optimizeAnimations);
-            map.put("renderSkip",         "" + renderSkip);
-            map.put("directionalRender",  "" + directionalRender.ordinal());
-            map.put("fastMathType",       "" + fastMathType.ordinal());
-            map.put("fastPlayerModel",    "" + fastPlayerModel);
-            map.put("optimizeHoppers",    "" + optimizeHoppers);
-            map.put("modelSpeed",         "" + playerModelSpeed);
-            map.put("fogType",            "" + fogType.ordinal());
+            map.put("fastRender",          "" + useFastRenderer);
+            map.put("fastmath",            "" + useFastMath);
+            map.put("optimizeAnimations",  "" + optimizeAnimations);
+            map.put("renderSkip",          "" + renderSkip);
+            map.put("directionalRender",   "" + directionalRender.ordinal());
+            map.put("fastMathType",        "" + fastMathType.ordinal());
+            map.put("fastPlayerModel",     "" + fastPlayerModel);
+            map.put("optimizeHoppers",     "" + optimizeHoppers);
+            map.put("fogType",             "" + fogType.ordinal());
+            map.put("fastItemRender",      "" + fastItemRender);
+            map.put("optimizeRedstone",    "" + optimizeRedstone);
+            map.put("capEntityCollisions", "" + capEntityCollisions);
 
             ThalliumMod.saveFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(ThalliumMod.saveFile);
@@ -156,8 +172,7 @@ public class ThalliumOptions {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Saved thallium options in " + (System.currentTimeMillis()-start) + "ms");
+        ThalliumMod.LOGGER.info("Saved thallium options in " + (System.currentTimeMillis()-start) + "ms");
     }
 
 

@@ -18,7 +18,8 @@ public class ThalliumOptionsScreen extends Screen {
 
     private static final Option[] OPTIONS = new Option[]{ThalliumOptions.FAST_RENDER, ThalliumOptions.FAST_MATH, ThalliumOptions.OPTIMIZE_ANIMATIONS,
             ThalliumOptions.RENDER_SKIP, ThalliumOptions.DIRECTIONAL_RENDER, ThalliumOptions.FAST_MATH_TYPE, ThalliumOptions.PLR_MODEL_OPTIMIZE, ThalliumOptions.HOPPER_OPTIMIZE,
-            ThalliumOptions.DOUBLE_TEST, ThalliumOptions.NO_FOG};
+            ThalliumOptions.NO_FOG, ThalliumOptions.BLOCK_TICK_OPTIMIZE, ThalliumOptions.FAST_ITEM_RENDER, ThalliumOptions.OPTIMIZE_REDSTONE,
+            ThalliumOptions.OPTIMIZE_ENTITY_COLLISION};
 
     private List<? extends OrderedText> tooltipList;
     private ButtonListWidget list;
@@ -63,7 +64,6 @@ public class ThalliumOptionsScreen extends Screen {
         try {
             // 1.16.2 Made some breaking changes to the GUI title
             // We put this method inside a try-block to keep compact with 1.16.1
-
             DrawableHelper.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 5, 0xFFFFFF);
         } catch (Exception e) {/* 1.16.1 */}
 

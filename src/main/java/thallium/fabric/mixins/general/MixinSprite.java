@@ -1,4 +1,4 @@
-package thallium.fabric.mixins.animations;
+package thallium.fabric.mixins.general;
 
 import org.spongepowered.asm.mixin.Mixin;
 

@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.util.math.MathHelper;
 import thallium.fabric.math.MathUtils;
-import thallium.fabric.gui.ThalliumOptions;
 
 @Mixin(MathHelper.class)
 public class MixinMathHelper {
@@ -18,12 +17,12 @@ public class MixinMathHelper {
 
     @Overwrite
     public static float sin(float value) {
-        return ThalliumOptions.useFastMath ? MathUtils.fastSin(value) : SINE_TABLE[(int)(value * 10430.378F) & 65535];
+        return MathUtils.fastSin(value);
     }
 
     @Overwrite
     public static float cos(float value) {
-        return ThalliumOptions.useFastMath ? MathUtils.fastCos(value)  : SINE_TABLE[(int)(value * 10430.378F + 16384.0F) & 65535];
+        return MathUtils.fastCos(value);
     }
 
 }

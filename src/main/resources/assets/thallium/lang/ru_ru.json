@@ -1,0 +1,5 @@
+{
+  "options.thallium.fastrender": "Использовать быстрый рендерер",
+  "options.thallium.fastMath": "Использовать быструю математику",
+  "options.thallium.optimizeAnimations": "Оптимизация анимации",
+}
