@@ -36,7 +36,11 @@ public abstract class MixinLivingEntity extends Entity {
     @Inject(at = @At("HEAD"), method = "tickCramming", cancellable = true)
     public void tickCramming_TH(CallbackInfo ci) {
         if (ThalliumOptions.capEntityCollisions) {
-            int interval = 40; // Wait 2 seconds, unlikely all the entities are going to vanish.
+            //
+            // We will assume here that the colliding mobs haven't vanish since 2 seconds. This will avoid
+            // the performance impact caused by getOtherEntities
+            //
+            int interval = 40;
             if (numCollisions <= 8 || (this.age % interval == 0)) {
                 List<Entity> list = this.world.getOtherEntities(this, this.getBoundingBox(), EntityPredicates.canBePushedBy(this));
                 if (!list.isEmpty()) {
@@ -47,7 +51,7 @@ public abstract class MixinLivingEntity extends Entity {
                             if (list.get(k).hasVehicle()) continue;
                             ++j;
                         }
-                        if (j > i - 1) this.damage(DamageSource.CRAMMING, 6.0f);
+                        if (j > i - 1) this.damage(DamageSource.CRAMMING, 6.0f * 2); // Double cramming damage
                     }
                     numCollisions = list.size();
                     for (int l = 0; l < list.size() && numCollisions < 8; ++l) {

@@ -4,9 +4,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -111,12 +108,6 @@ public abstract class MixinBlockPos extends Vec3i {
             default:
                 return new BlockPos(this.getX() + direction_1.getOffsetX(), this.getY() + direction_1.getOffsetY(), this.getZ() + direction_1.getOffsetZ());
         }
-    }
-
-    @Overwrite
-    public static Optional<BlockPos> findClosest(BlockPos pos, int horizontalRange, int verticalRange, Predicate<BlockPos> condition) {
-        System.out.println("FIND CLOSEEST");
-        return BlockPos.streamOutwards(pos, horizontalRange, verticalRange, horizontalRange).filter(condition).findFirst();
     }
 
 }

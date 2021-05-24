@@ -1,8 +1,6 @@
-package thallium.fabric.mixins.general;
+package thallium.fabric.mixins.animation;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,15 +10,14 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.WorldRenderer.ChunkInfo;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import thallium.fabric.gui.EnumFogType;
+import thallium.fabric.gui.ThalliumOptions;
 import thallium.fabric.interfaces.IWorldRenderer;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer implements IWorldRenderer {
 
     @Shadow
-    @Final
     private ObjectList<ChunkInfo> visibleChunks;
 
     @Override
@@ -32,8 +29,11 @@ public class MixinWorldRenderer implements IWorldRenderer {
      * @reason Disable sky
      * @author ThalliumMod
      */
-    @Overwrite
-    public void renderSky(MatrixStack matrices, float tickDelta) {
+    @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
+    public void thallium_noSky(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+        if (ThalliumOptions.fogType == EnumFogType.OFF) {
+            ci.cancel();
+        }
     }
 
 }

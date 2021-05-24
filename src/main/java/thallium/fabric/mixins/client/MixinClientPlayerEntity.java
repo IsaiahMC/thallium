@@ -1,4 +1,4 @@
-package thallium.fabric.mixins.general;
+package thallium.fabric.mixins.client;
 
 import java.util.List;
 

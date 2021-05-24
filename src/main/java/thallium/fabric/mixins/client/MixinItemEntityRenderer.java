@@ -1,5 +1,7 @@
-package thallium.fabric.mixins.general;
+package thallium.fabric.mixins.client;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,6 +29,8 @@ public abstract class MixinItemEntityRenderer {
     @Shadow public ItemRenderer itemRenderer;
     @Shadow public Random random;
 
+    //private static HashMap<ItemEntity, Long> last = new HashMap<>();
+
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     public void fastRender(ItemEntity itemEntity, float f, float g, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo ci) {
         if (!ThalliumOptions.fastItemRender)
@@ -39,8 +43,10 @@ public abstract class MixinItemEntityRenderer {
         matrix.translate(0.0, 0.24f, 0.0);
         matrix.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion(itemEntity.method_27314(g)));
 
-        for (int amount = 0; amount < this.getRenderedAmount(itemStack); ++amount)
-            this.itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, false, matrix, vertexConsumerProvider, light, OverlayTexture.DEFAULT_UV, bakedModel);
+        int max = this.getRenderedAmount(itemStack);
+        for (int amount = 0; amount < max; ++amount) {
+           this.itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, false, matrix, vertexConsumerProvider, light, OverlayTexture.DEFAULT_UV, bakedModel);
+        }
 
         matrix.pop();
         ci.cancel();
