@@ -22,6 +22,7 @@ public class ThalliumOptions {
     public static boolean optimizeRedstone    = true;
     public static boolean capEntityCollisions = true;
     public static boolean optimizeRaytraceAir = true;
+    public static boolean hashtable4Blockset  = true;
 
     public static boolean animateWater = true;
     public static boolean animateLava = true;
@@ -84,6 +85,8 @@ public class ThalliumOptions {
                     animateCmdBlock = Boolean.valueOf(key);
                 if (str.equalsIgnoreCase("optimizeRaytraceAir"))
                     optimizeRaytraceAir = Boolean.valueOf(key);
+                if (str.equalsIgnoreCase("hashtable4Blockset"))
+                    hashtable4Blockset = Boolean.valueOf(key);
             }
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -116,6 +119,7 @@ public class ThalliumOptions {
             map.put("animateTextures",     "" + animateTextures);
             map.put("animateCmdBlock",     "" + animateCmdBlock);
             map.put("optimizeRaytraceAir", "" + optimizeRaytraceAir);
+            map.put("hashtable4Blockset",  "" + hashtable4Blockset);
 
             ThalliumMod.saveFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(ThalliumMod.saveFile);

@@ -11,7 +11,8 @@
     "general.MixinPlayerEntity",
     "general.MixinLivingEntity",
     "general.MixinEntity",
-    "tuinity.MixinBlockView"
+    "tuinity.MixinBlockView",
+    "tuinity.MixinChunkHolder"
   ],
   "client": [
     "fastmath.MixinMathHelper",

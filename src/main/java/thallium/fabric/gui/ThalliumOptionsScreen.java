@@ -73,7 +73,11 @@ public class ThalliumOptionsScreen extends Screen {
         optimizeRaytraceAir = boolean_;
         save();
     });
-    
+
+    public static final BooleanOption HT_BLSET = new BooleanOption("Hashtable for block set", gameOptions -> hashtable4Blockset, (gameOptions, boolean_) -> {
+        hashtable4Blockset = boolean_;
+        save();
+    });
 
     public static CyclingOption DIRECTIONAL_RENDER;
     public static CyclingOption FAST_MATH_TYPE;
@@ -121,7 +125,7 @@ public class ThalliumOptionsScreen extends Screen {
         Option[] OPTIONS = new Option[]{FAST_RENDER, FAST_MATH,
                         DIRECTIONAL_RENDER, FAST_MATH_TYPE, PLR_MODEL_OPTIMIZE, HOPPER_OPTIMIZE,
                         NO_FOG, BLOCK_TICK_OPTIMIZE, FAST_ITEM_RENDER, OPTIMIZE_REDSTONE,
-                        OPTIMIZE_ENTITY_COLLISION, ANIMATION_SCREEN, NO_RAYTRACE_AIR};
+                        OPTIMIZE_ENTITY_COLLISION, ANIMATION_SCREEN, NO_RAYTRACE_AIR, HT_BLSET};
 
         this.list.addAll(OPTIONS);
         this.children.add(this.list);
