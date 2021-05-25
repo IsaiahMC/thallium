@@ -12,7 +12,8 @@
     "general.MixinLivingEntity",
     "general.MixinEntity",
     "tuinity.MixinBlockView",
-    "tuinity.MixinChunkHolder"
+    "tuinity.MixinChunkHolder",
+    "bugfix.MixinUpdateStructureBlockC2SPacket"
   ],
   "client": [
     "fastmath.MixinMathHelper",

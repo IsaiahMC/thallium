@@ -26,7 +26,7 @@ public class MixinChunkHolder {
     @Shadow public boolean pendingBlockUpdates;
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ChunkSectionPos;getSectionCoord(I)I"), method = "Lnet/minecraft/server/world/ChunkHolder;markForBlockUpdate(Lnet/minecraft/util/math/BlockPos;)V")
-    public int test(int a) {
+    public int thallium_useHashTable(int a) {
         int b = ChunkSectionPos.getSectionCoord(a);
         if (this.blockUpdatesBySection[b] == null) {
             this.pendingBlockUpdates = true;
